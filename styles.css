@@ -1,0 +1,72 @@
+/* ----------------------------------------------------------------
+  [1] 전역 리셋 및 공통 스타일
+------------------------------------------------------------------ */
+/* 기본 리셋 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* 바디 기본 설정 */
+  body {
+    font-family: "Noto Sans KR", sans-serif; /* 원하는 폰트로 교체 가능 */
+    line-height: 1.5;
+    color: #333; /* 글자색 */
+    background-color: #fff;
+    overflow-x: hidden; /* 가로 스크롤 방지 */
+  }
+  
+  /* ----------------------------------------------------------------
+    [2] 섹션별 공통 스타일
+  ------------------------------------------------------------------ */
+  section {
+    display: flex;            /* 수직, 수평 정렬 편하게 하기 위해 flex 사용 */
+    align-items: center;      /* 수직 중앙 정렬 */
+    justify-content: center;  /* 수평 중앙 정렬 */
+    min-height: 100vh;        /* 화면 높이만큼 섹션을 차지하도록 설정 */
+    padding: 2rem;
+  }
+  
+  /* 각 섹션에 배경색/이미지 등을 임시로 부여해 구분이 쉽게 */
+  .intro {
+    background-color: #f0f0f0; 
+  }
+  
+
+
+/* DNA 점(dot) 기본 스타일 */
+.dna-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #7b50fc;
+  opacity: 1;   /* 처음에는 안 보이게 */
+  /* transform-origin을 중앙으로 (회전축) */
+  transform-origin: center;
+}
+
+  
+  .content {
+    background-color: #d3d3d3; 
+  }
+  
+  .card-news {
+    background-color: #cfcfcf; 
+  }
+  
+  /* ----------------------------------------------------------------
+    [3] 기타 스타일 (글자 크기 등)
+  ------------------------------------------------------------------ */
+  h1, h2 {
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    max-width: 700px;
+    text-align: center;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
