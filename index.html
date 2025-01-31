@@ -40,6 +40,12 @@
 
   <!-- JS 연결 -->
   <script type="module" src="js/script.js"></script>
+  <script type="module">
+  import * as THREE from 'https://unpkg.com/three@0.152.0/build/three.module.js';
+  import { EffectComposer } from 'https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/EffectComposer.js';
+  import { RenderPass } from 'https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/RenderPass.js';
+  import { UnrealBloomPass } from 'https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+  </script>
 
   <!-- GSAP & ScrollTrigger CDN (head나 body 하단 아무 곳에나) -->
 
