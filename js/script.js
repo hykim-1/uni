@@ -1,15 +1,35 @@
 // script.js
 import * as THREE from "https://unpkg.com/three@0.152.0/build/three.module.js";
-import { EffectComposer } from 'https://three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'https://three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'https://three/examples/jsm/postprocessing/UnrealBloomPass.js';
-// 코드 시작
-console.log("Three version:", THREE.REVISION);
+// ↓ 실제 postprocessing 모듈들도 unpkg 경로로
+import { EffectComposer } from "https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/UnrealBloomPass.js";
 
+// GSAP (전역객체 gsap, ScrollTrigger)는 html의 <script>에서 이미 로드 가정
+gsap.registerPlugin(ScrollTrigger);
+
+// 1) Three.js 초기 설정
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x444444);
+
+const camera = new THREE.PerspectiveCamera(
+  75, 
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.z = 300;
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// 2) EffectComposer 설정 (renderer 필요)
 const composer = new EffectComposer(renderer);
 const renderPass = new RenderPass(scene, camera);
 composer.addPass(renderPass);
 
+// BloomPass
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
   1.5,  // strength
@@ -18,52 +38,27 @@ const bloomPass = new UnrealBloomPass(
 );
 composer.addPass(bloomPass);
 
-// gsap, ScrollTrigger 불러오기
-gsap.registerPlugin(ScrollTrigger);
-
-const scene = new THREE.Scene();
-
-scene.background = new THREE.Color(0x444444); 
-
-
-const camera = new THREE.PerspectiveCamera(
-  75, // 시야각
-  window.innerWidth / window.innerHeight, // 종횡비
-  0.1, // 근접 절단면
-  1000 // 원거리 절단면
-);
-camera.position.z = 300; // 카메라 뒤로 약간 물러나 있는 상태
-
-const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-const container = document.getElementById('dna-canvas-container');
-container.appendChild(renderer.domElement);
-
-// C) 라이트 추가(기본광, 방향광 등)
+// 라이트
 const light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(1, 1, 1).normalize();
 scene.add(light);
 
-const dnaGroup = new THREE.Group(); 
+// 3) DNA 오브젝트 생성
+const dnaGroup = new THREE.Group();
 scene.add(dnaGroup);
 
 const totalPoints = 40;
-const helixRevolution = 2;   // 2바퀴 회전
-const helixHeight = 200;     // 나선 높이
-const radius = 50;           // 나선의 반경
-// 먼저 전역 범위에 배열 선언
-const dnaSpheres = [];
+const helixRevolution = 2;
+const helixHeight = 200;
+const radius = 50;
 
 const sphereA = [];
 const sphereB = [];
 
-const startColor = new THREE.Color(0xff4933); // 붉은 계열
-const endColor   = new THREE.Color(0xffae00); // 오렌지 계열
+const startColor = new THREE.Color(0xff4933);
+const endColor = new THREE.Color(0xffae00);
 
-
-// [1] 가닥 A 생성
+// 가닥 A
 for (let i = 0; i < totalPoints; i++) {
   const t = i / totalPoints;
   const colorA = new THREE.Color().lerpColors(startColor, endColor, t);
@@ -76,12 +71,12 @@ for (let i = 0; i < totalPoints; i++) {
   const matA = new THREE.MeshStandardMaterial({ color: colorA });
   const meshA = new THREE.Mesh(geoA, matA);
   meshA.position.set(x, y, z);
-
+  
   dnaGroup.add(meshA);
   sphereA.push(meshA);
 }
 
-// [2] 가닥 B 생성
+// 가닥 B
 for (let i = 0; i < totalPoints; i++) {
   const t = i / totalPoints;
   const colorB = new THREE.Color().lerpColors(startColor, endColor, t);
@@ -99,60 +94,50 @@ for (let i = 0; i < totalPoints; i++) {
   sphereB.push(meshB);
 }
 
-const subCount = 20; // 분할 개수 (작은 분자 갯수)
-
-// 브리지 생성 for문
+// 브리지(작은 분자들)
+const subCount = 20;
 for (let i = 0; i < totalPoints; i++) {
   const t = i / totalPoints;
   const colorC = new THREE.Color().lerpColors(startColor, endColor, t);
   const posA = sphereA[i].position;
   const posB = sphereB[i].position;
 
-  // subCount+1개 점을 찍어, 0%, 10%, 20% ... 100% 지점
   for (let k = 0; k <= subCount; k++) {
-    const alpha = k / subCount; // 0~1
-
-    // 보간 위치
+    const alpha = k / subCount;
     const pos = new THREE.Vector3().lerpVectors(posA, posB, alpha);
 
-    // 작은 Sphere
-    const miniRadius = 2;  // 브리지 구체의 반지름 (원하는 크기)
-    const geometry = new THREE.SphereGeometry(miniRadius, 16, 16);
-    const material = new THREE.MeshStandardMaterial({ color: colorC });
-    const miniSphere = new THREE.Mesh(geometry, material);
-
+    const geo = new THREE.SphereGeometry(2, 16, 16);
+    const mat = new THREE.MeshStandardMaterial({ color: colorC });
+    const miniSphere = new THREE.Mesh(geo, mat);
     miniSphere.position.copy(pos);
-
     dnaGroup.add(miniSphere);
   }
 }
 
-
-
+// 4) 애니메이션 루프
 function animate() {
   requestAnimationFrame(animate);
-  
-  // dnaGroup.rotation.y += 0.01; // 자동 회전(테스트용)
-  
-  renderer.render(scene, camera);
+
+  //renderer.render(scene, camera);
   composer.render();
 }
 animate();
 
-
-
-// "회전" 애니메이션
+// 5) ScrollTrigger 예시: dnaGroup 회전
 gsap.to(dnaGroup.rotation, {
-  y: 2 * Math.PI, // 2π = 360도
+  y: 2 * Math.PI,
   scrollTrigger: {
-    trigger: ".dna-section",  // 스크롤 트리거가 될 섹션/요소
+    trigger: ".dna-section",
     start: "top center",
     end: "bottom center",
-    scrub: true,
-  
+    scrub: true
   },
   ease: "none"
 });
+
+console.log("Three version:", THREE.REVISION);
+
+
 
 
 
