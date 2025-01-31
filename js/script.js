@@ -3,7 +3,9 @@ import * as THREE from "https://unpkg.com/three@0.152.0/build/three.module.js";
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-// ...
+// 코드 시작
+console.log("Three version:", THREE.REVISION);
+
 const composer = new EffectComposer(renderer);
 const renderPass = new RenderPass(scene, camera);
 composer.addPass(renderPass);
