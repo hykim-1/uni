@@ -1,4 +1,5 @@
 // script.js
+import * as THREE from "https://unpkg.com/three@0.152.0/build/three.module.js";
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
