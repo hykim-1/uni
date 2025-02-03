@@ -1,5 +1,5 @@
 // script.js
-import * as THREE from "https://unpkg.com/three@0.152.0/build/three.module.js";
+import * as THREE from "../three/build/three.module.js";
 // ↓ 실제 postprocessing 모듈들도 unpkg 경로로
 import { EffectComposer } from "https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/RenderPass.js";
