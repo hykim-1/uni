@@ -1,9 +1,9 @@
 // script.js
 import * as THREE from "../three/build/three.module.js";
 // ↓ 실제 postprocessing 모듈들도 unpkg 경로로
-import { EffectComposer } from "https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "https://unpkg.com/three@0.152.0/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { EffectComposer } from "../three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "../three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "../three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
 // GSAP (전역객체 gsap, ScrollTrigger)는 html의 <script>에서 이미 로드 가정
 gsap.registerPlugin(ScrollTrigger);
